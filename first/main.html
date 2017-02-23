@@ -34,35 +34,38 @@
           onChange: React.PropTypes.func.isRequired
         },
 
+        onNameInputChange: function(event) {
+          this.props.onChange(Object.assign({}, this.props.contact, {name: event.target.value}))
+        },
+        onEmailInputChange: function(event) {
+          this.props.onChange(Object.assign({}, this.props.contact, {email: event.target.value}))
+        },
+        onDescriptionInputChange: function(event) {
+          this.props.onChange(Object.assign({}, this.props.contact, {description: event.target.value}))
+        },
 
         render: function() {
-
-          var updatedChange = (fields) => {
-            var updated = Object.assign({}, this.props.contact, fields)
-            this.props.onChange(updated)
-          }
-
           return (
-              React.createElement('form', {className: "ContactForm"},
-                React.createElement('input', {
-                  placeholder: 'Name (Required)',
-                  type: 'text',
-                  value: this.props.contact.name,
-                  onChange: (event) => updatedChange({"name": event.target.value})
-                }),
-                React.createElement('input', {
-                  placeholder: 'Email',
-                  type: 'email',
-                  value: this.props.contact.email,
-                  onChange: (event) => updatedChange({"email": event.target.value})
-                }),
-                React.createElement('textarea', {
-                  placeholder: 'Description',
-                  value: this.props.contact.description,
-                  onChange: (event) => updatedChange({"description": event.target.value})
-                }),
-                React.createElement('button', {type: "submit"}, 'Add contact')
-              )
+            React.createElement('form', {className: "ContactForm"},
+              React.createElement('input', {
+                placeholder: 'Name (Required)',
+                type: 'text',
+                value: this.props.contact.name,
+                onChange: this.onNameInputChange
+              }),
+              React.createElement('input', {
+                placeholder: 'Email',
+                type: 'email',
+                value: this.props.contact.email,
+                onChange: this.onEmailInputChange
+              }),
+              React.createElement('textarea', {
+                placeholder: 'Description',
+                value: this.props.contact.description,
+                onChange: this.onDescriptionInputChange
+              }),
+              React.createElement('button', {type: "submit"}, 'Add contact')
+            )
           )
         }
       })
@@ -84,7 +87,7 @@
               React.createElement('ul', {className: "ContactView-list"}, contactList),
               React.createElement(ContactForm, {
                 contact: this.props.newContact,
-                onChange: (contact) => { console.log(contact) ; this.props.onContactChange(contact) }
+                onChange: this.props.onContactChange
               })
             )
           )
@@ -112,7 +115,6 @@
 
       var contactUpdated = (state) => (contact) => {
         var newState = Object.assign({}, state, {newContact: contact})
-        console.log(newState)
         updateTheWorld(newState)
       }
 
