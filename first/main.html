@@ -10,13 +10,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react-dom.js"></script>
     <script type="text/javascript">
-      var testContacts = [
-        {key: 1, name: "Bob Sponge", email: "bob@example.com", description: "Ninja"},
-        {key: 3, name: "Marco Polo", email: "mc@example.com", description: "Animal"},
-        {key: 2, name: "Patrik Star", description: "Sea Star!"}
-      ]
-
-
       var ContactItem = React.createClass({
         propTypes: {
           name: React.PropTypes.string.isRequired,
@@ -37,15 +30,37 @@
 
       var ContactForm = React.createClass({
         propTypes: {
-          contact: React.PropTypes.object.isRequired
+          contact: React.PropTypes.object.isRequired,
+          onChange: React.PropTypes.func.isRequired
         },
 
+
         render: function() {
+
+          var updatedChange = (fields) => {
+            var updated = Object.assign({}, this.props.contact, fields)
+            this.props.onChange(updated)
+          }
+
           return (
               React.createElement('form', {className: "ContactForm"},
-                React.createElement('input', {placeholder: 'Name (Required)', value: this.props.contact.name}),
-                React.createElement('input', {placeholder: 'Email', value: this.props.contact.email}),
-                React.createElement('textarea', {placeholder: 'Description', value: this.props.contact.description}),
+                React.createElement('input', {
+                  placeholder: 'Name (Required)',
+                  type: 'text',
+                  value: this.props.contact.name,
+                  onChange: (event) => updatedChange({"name": event.target.value})
+                }),
+                React.createElement('input', {
+                  placeholder: 'Email',
+                  type: 'email',
+                  value: this.props.contact.email,
+                  onChange: (event) => updatedChange({"email": event.target.value})
+                }),
+                React.createElement('textarea', {
+                  placeholder: 'Description',
+                  value: this.props.contact.description,
+                  onChange: (event) => updatedChange({"description": event.target.value})
+                }),
                 React.createElement('button', {type: "submit"}, 'Add contact')
               )
           )
@@ -56,6 +71,7 @@
         propTypes: {
           contacts: React.PropTypes.array.isRequired,
           newContact: React.PropTypes.object.isRequired,
+          onContactChange: React.PropTypes.func.isRequired
         },
 
         render: function() {
@@ -66,16 +82,48 @@
             React.createElement('div', {className: "ContactView"},
               React.createElement('h1', {className: "ContactView-title"}, "Contacts"),
               React.createElement('ul', {className: "ContactView-list"}, contactList),
-              React.createElement(ContactForm, {contact: this.props.newContact})
+              React.createElement(ContactForm, {
+                contact: this.props.newContact,
+                onChange: (contact) => { console.log(contact) ; this.props.onContactChange(contact) }
+              })
             )
           )
         }
       })
 
-      var rootElement = React.createElement(ContactView, {contacts: testContacts, newContact: {}})
+
+      /////////////// MODEL //////////////
+
+      var testContacts = [
+        {key: 1, name: "Bob Sponge", email: "bob@example.com", description: "Ninja"},
+        {key: 3, name: "Marco Polo", email: "mc@example.com", description: "Animal"},
+        {key: 2, name: "Patrik Star", description: "Sea Star!"}
+      ]
+
+      var newContact = {name: "", email: "", description: ""}
+
+      var initialState = {
+        contacts: testContacts,
+        newContact: newContact
+      }
 
 
-      ReactDOM.render(rootElement, document.getElementById('React.app'))
+      ////////// State foo //////////////
+
+      var contactUpdated = (state) => (contact) => {
+        var newState = Object.assign({}, state, {newContact: contact})
+        console.log(newState)
+        updateTheWorld(newState)
+      }
+
+      function updateTheWorld(state) {
+        var rootElement = React.createElement(ContactView, Object.assign({}, state, {onContactChange: contactUpdated(state)}))
+
+        ReactDOM.render(rootElement, document.getElementById('React.app'))
+      }
+
+      updateTheWorld(initialState)
+
     </script>
 
   </body>
