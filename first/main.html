@@ -95,22 +95,6 @@
       })
 
 
-      /////////////// MODEL //////////////
-
-      var testContacts = [
-        {key: 1, name: "Bob Sponge", email: "bob@example.com", description: "Ninja"},
-        {key: 3, name: "Marco Polo", email: "mc@example.com", description: "Animal"},
-        {key: 2, name: "Patrik Star", description: "Sea Star!"}
-      ]
-
-      var newContact = {name: "", email: "", description: ""}
-
-      var initialState = {
-        contacts: testContacts,
-        newContact: newContact
-      }
-
-
       ////////// State foo //////////////
 
       var contactUpdated = (state) => (contact) => {
@@ -124,7 +108,17 @@
         ReactDOM.render(rootElement, document.getElementById('React.app'))
       }
 
-      updateTheWorld(initialState)
+      // Set initial state //
+      updateTheWorld(
+        {
+          contacts: [
+            {key: 1, name: "Bob Sponge", email: "bob@example.com", description: "Ninja"},
+            {key: 3, name: "Marco Polo", email: "mc@example.com", description: "Animal"},
+            {key: 2, name: "Patrik Star", description: "Sea Star!"}
+          ],
+          newContact: {name: "", email: "", description: ""}
+        }
+      )
 
     </script>
 
