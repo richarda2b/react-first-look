@@ -31,7 +31,8 @@
       var ContactForm = React.createClass({
         propTypes: {
           contact: React.PropTypes.object.isRequired,
-          onChange: React.PropTypes.func.isRequired
+          onChange: React.PropTypes.func.isRequired,
+          onSubmit: React.PropTypes.func.isRequired
         },
 
         onNameInputChange: function(event) {
@@ -46,10 +47,11 @@
 
         render: function() {
           return (
-            React.createElement('form', {className: "ContactForm"},
+            React.createElement('form', {className: "ContactForm", onSubmit: this.props.onSubmit},
               React.createElement('input', {
                 placeholder: 'Name (Required)',
                 type: 'text',
+                required: true,
                 value: this.props.contact.name,
                 onChange: this.onNameInputChange
               }),
@@ -74,7 +76,8 @@
         propTypes: {
           contacts: React.PropTypes.array.isRequired,
           newContact: React.PropTypes.object.isRequired,
-          onContactChange: React.PropTypes.func.isRequired
+          onContactChange: React.PropTypes.func.isRequired,
+          onFormSubmit: React.PropTypes.func.isRequired 
         },
 
         render: function() {
@@ -87,7 +90,8 @@
               React.createElement('ul', {className: "ContactView-list"}, contactList),
               React.createElement(ContactForm, {
                 contact: this.props.newContact,
-                onChange: this.props.onContactChange
+                onChange: this.props.onContactChange,
+                onSubmit: this.props.onFormSubmit
               })
             )
           )
@@ -95,15 +99,33 @@
       })
 
 
-      ////////// State foo //////////////
+      //////////// Actions ////////////
 
       var contactUpdated = (state) => (contact) => {
         var newState = Object.assign({}, state, {newContact: contact})
         updateTheWorld(newState)
       }
 
+      var submitNewContact = (state) => (event) => {
+        event.preventDefault()
+
+        if(state.newContact.name && state.newContact.email) {
+          var contact = Object.assign({}, state.newContact,{ key: new Date().getTime() })
+          var contacts = state.contacts.slice().concat(contact)
+          var newState = Object.assign({}, state, {contacts: contacts, newContact: {name: "", email: "", description: ""}})
+
+          updateTheWorld(newState)
+        }
+      }
+
+
+      ////////// State foo //////////////
+
       function updateTheWorld(state) {
-        var rootElement = React.createElement(ContactView, Object.assign({}, state, {onContactChange: contactUpdated(state)}))
+        var rootElement = React.createElement(ContactView, Object.assign({}, state, {
+          onContactChange: contactUpdated(state),
+          onFormSubmit: submitNewContact(state)
+        }))
 
         ReactDOM.render(rootElement, document.getElementById('React.app'))
       }
