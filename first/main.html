@@ -46,19 +46,22 @@
         },
 
         render: function() {
+          var errors = this.props.contact.errors;
+
           return (
             React.createElement('form', {className: "ContactForm", onSubmit: this.props.onSubmit},
               React.createElement('input', {
                 placeholder: 'Name (Required)',
                 type: 'text',
-                required: true,
                 value: this.props.contact.name,
+                className: errors.name && 'ContactForm-error',
                 onChange: this.onNameInputChange
               }),
               React.createElement('input', {
                 placeholder: 'Email',
                 type: 'email',
                 value: this.props.contact.email,
+                className: errors.email && 'ContactForm-error',
                 onChange: this.onEmailInputChange
               }),
               React.createElement('textarea', {
@@ -109,11 +112,19 @@
       var submitNewContact = (state) => (event) => {
         event.preventDefault()
 
-        if(state.newContact.name && state.newContact.email) {
-          var contact = Object.assign({}, state.newContact,{ key: new Date().getTime() })
-          var contacts = state.contacts.slice().concat(contact)
-          var newState = Object.assign({}, state, {contacts: contacts, newContact: {name: "", email: "", description: ""}})
+        var errors = {
+          name: !state.newContact.name ? true : null,
+          email: !state.newContact.email ? true : null
+        }
 
+        if(!Object.values(errors).find(v => v )) {
+          var contact = Object.assign({}, state.newContact, { key: new Date().getTime()})
+          var contacts = state.contacts.slice().concat(contact)
+          var newState = Object.assign({}, state, {contacts: contacts, newContact: {name: "", email: "", description: "", errors: {}}})
+          updateTheWorld(newState)
+        } else {
+          var contactWithError = Object.assign({}, state.newContact, {errors: errors})
+          var newState = Object.assign({}, state, {newContact: contactWithError})
           updateTheWorld(newState)
         }
       }
@@ -138,7 +149,7 @@
             {key: 3, name: "Marco Polo", email: "mc@example.com", description: "Animal"},
             {key: 2, name: "Patrik Star", description: "Sea Star!"}
           ],
-          newContact: {name: "", email: "", description: ""}
+          newContact: {name: "", email: "", description: "", errors: {}}
         }
       )
 
