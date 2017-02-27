@@ -40,9 +40,9 @@
 
           if(this.isMounted && errors && errors != prevProps.contact.errors) {
             if(errors.name) {
-              this.refs.name.focus();
+              this.nameInput.focus();
             } else if(this.props.contact.errors.email) {
-              this.refs.email.focus();
+              this.emailInput.focus();
             }
           }
         },
@@ -68,13 +68,13 @@
                 value: this.props.contact.name,
                 className: errors.name && 'ContactForm-error',
                 autoFocus: true,
-                ref: "name",
+                ref: (name) => this.nameInput = name,
                 onChange: this.onNameInputChange
               }),
               React.createElement('input', {
                 placeholder: 'Email',
                 type: 'email',
-                ref: 'email',
+                ref: (input) => {this.emailInput = input},
                 value: this.props.contact.email,
                 className: errors.email && 'ContactForm-error',
                 onChange: this.onEmailInputChange
