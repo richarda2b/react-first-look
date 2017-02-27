@@ -35,6 +35,18 @@
           onSubmit: React.PropTypes.func.isRequired
         },
 
+        componentDidUpdate: function(prevProps) {
+          var errors = this.props.contact.errors;
+
+          if(this.isMounted && errors && errors != prevProps.contact.errors) {
+            if(errors.name) {
+              this.refs.name.focus();
+            } else if(this.props.contact.errors.email) {
+              this.refs.email.focus();
+            }
+          }
+        },
+
         onNameInputChange: function(event) {
           this.props.onChange(Object.assign({}, this.props.contact, {name: event.target.value}))
         },
@@ -55,11 +67,14 @@
                 type: 'text',
                 value: this.props.contact.name,
                 className: errors.name && 'ContactForm-error',
+                autoFocus: true,
+                ref: "name",
                 onChange: this.onNameInputChange
               }),
               React.createElement('input', {
                 placeholder: 'Email',
                 type: 'email',
+                ref: 'email',
                 value: this.props.contact.email,
                 className: errors.email && 'ContactForm-error',
                 onChange: this.onEmailInputChange
