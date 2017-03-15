@@ -1,0 +1,11 @@
+{
+  "name": "contact-form",
+  "version": "0.0.1",
+  "description": "Simple contact form",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "richarda2b",
+  "license": "ISC"
+}
