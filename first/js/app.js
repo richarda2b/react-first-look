@@ -1,6 +1,11 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {ContactItem, ContactForm, ContactView} from './contact-view';
+import {contactUpdated, submitNewContact, foo} from './form-actions';
+
 ////////// State foo //////////////
 
-function updateTheWorld(state) {
+export function updateTheWorld(state) {
   var rootElement = React.createElement(ContactView, Object.assign({}, state, {
     onContactChange: contactUpdated(state),
     onFormSubmit: submitNewContact(state)

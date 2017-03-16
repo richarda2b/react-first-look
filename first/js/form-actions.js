@@ -1,9 +1,11 @@
-var contactUpdated = (state) => (contact) => {
+import {updateTheWorld} from './app.js';
+
+export const contactUpdated = (state) => (contact) => {
   var newState = Object.assign({}, state, {newContact: contact})
-    updateTheWorld(newState)
+  updateTheWorld(newState)
 }
 
-var submitNewContact = (state) => (event) => {
+export const submitNewContact = (state) => (event) => {
   event.preventDefault()
 
     var errors = {

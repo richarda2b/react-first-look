@@ -1,4 +1,6 @@
-var ContactItem = React.createClass({
+import React from 'react';
+
+export const ContactItem = React.createClass({
   propTypes: {
     name: React.PropTypes.string.isRequired,
     email: React.PropTypes.string.isRequired,
@@ -16,7 +18,7 @@ var ContactItem = React.createClass({
   }
 })
 
-var ContactForm = React.createClass({
+export const ContactForm = React.createClass({
   propTypes: {
     contact: React.PropTypes.object.isRequired,
     onChange: React.PropTypes.func.isRequired,
@@ -78,7 +80,7 @@ var ContactForm = React.createClass({
   }
 })
 
-var ContactView = React.createClass({
+export const ContactView = React.createClass({
   propTypes: {
     contacts: React.PropTypes.array.isRequired,
     newContact: React.PropTypes.object.isRequired,
